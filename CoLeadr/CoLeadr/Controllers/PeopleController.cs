@@ -156,17 +156,33 @@ namespace CoLeadr.Controllers
 
             return View(viewmodel);
             }
-        
+
         //POST: People/AddToGroup 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddMemberToGroup(int? PersonId, int? SelectedGroupId)
+        public ActionResult AddMemberToGroup(PersonGroupingViewModel vm)
         {
-            Person person = db.People.Find(PersonId);
-            Group group = db.Groups.Find(SelectedGroupId);
-            group.Members.Add(person);
-            db.SaveChanges();
-            return View();
+            if (ModelState.IsValid) //so the viewmodel is coming back as a valid model since it's not 400-ing... 
+            {
+                SelectList allthegroups = new SelectList(db.Groups, "GroupId", "Name");
+                vm.AllGroups = allthegroups;
+
+
+                int PersonId = vm.PersonId;
+                int GroupId = vm.SelectedGroupId;
+
+                Person person = db.People.Find(PersonId);
+                Group group = db.Groups.Find(GroupId);
+                group.Members.Add(person); 
+                db.SaveChanges();
+
+                vm.Memberships = person.Memberships.ToList();
+
+                return View(vm);
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Something is wrong with the returned viewmodel.");
+
         }
 
     }

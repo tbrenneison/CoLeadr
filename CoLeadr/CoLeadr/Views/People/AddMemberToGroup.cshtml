@@ -7,9 +7,9 @@
 <h2>Add Member To Group</h2>
 <hr />
 
-@using (Html.BeginForm("AddMemberToGroup"))
+@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+@Html.AntiForgeryToken()
 
     <div>
         <h4>Groups @Html.DisplayFor(model => model.FirstName) is already in:</h4>
@@ -28,7 +28,7 @@
 
         <div class="form-group">
             <label>Group: </label>
-            @Html.DropDownListFor(m => m.SelectedGroupId, Model.AllGroups, String.Empty)
+            @Html.DropDownListFor(model => model.SelectedGroupId, Model.AllGroups, "Select A Group")
         </div>
 
         <div class="form-group">
