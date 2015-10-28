@@ -133,7 +133,9 @@ namespace CoLeadr.Controllers
                  {
                      return new HttpStatusCodeResult(HttpStatusCode.BadRequest); 
                  }
+
                  Person person = db.People.Find(PersonId);
+
                  if (person == null)
                  {
                      return HttpNotFound();
@@ -147,13 +149,14 @@ namespace CoLeadr.Controllers
             viewmodel.LastName = person.LastName;
             viewmodel.AllGroups = allthegroups;
 
-            //viewmodel.Memberships cannot be empty
+
+            //viewmodel.Memberships cannot be empty AND THEY ARE ALWAYS EMPTY
             if (person.Memberships == null)
             {
                 viewmodel.Memberships = new List<Group>();
             }
-            else { viewmodel.Memberships = person.Memberships.ToList(); }
-
+            else { viewmodel.Memberships = person.Memberships; }
+            
             return View(viewmodel);
             }
 
@@ -162,23 +165,29 @@ namespace CoLeadr.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddMemberToGroup(PersonGroupingViewModel vm)
         {
-            if (ModelState.IsValid) //so the viewmodel is coming back as a valid model since it's not 400-ing... 
+            if (ModelState.IsValid) 
             {
-                SelectList allthegroups = new SelectList(db.Groups, "GroupId", "Name");
-                vm.AllGroups = allthegroups;
-
-
                 int PersonId = vm.PersonId;
                 int GroupId = vm.SelectedGroupId;
-
                 Person person = db.People.Find(PersonId);
                 Group group = db.Groups.Find(GroupId);
-                group.Members.Add(person); 
+
+                if (group.Members == null)
+                {
+                    group.Members = new List<Person>();
+                    group.Members.Add(person);
+                }
+                else
+                {
+                    group.Members.Add(person);
+                }
+
+                person.Memberships = vm.Memberships; 
+
                 db.SaveChanges();
 
-                vm.Memberships = person.Memberships.ToList();
-
-                return View(vm);
+               return View(vm);
+               
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Something is wrong with the returned viewmodel.");

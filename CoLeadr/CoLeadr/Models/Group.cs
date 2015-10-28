@@ -11,6 +11,6 @@ namespace CoLeadr.Models
 
         public string Name { get; set; }
 
-        public IList<Person> Members { get; set; }
+        public List<Person> Members { get; set; }
     }
 }

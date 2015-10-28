@@ -17,7 +17,7 @@ namespace CoLeadr.Models
         public string City { get; set; }
         public string State { get; set; }
 
-       public IList<Group> Memberships { get; set; }
+       public List<Group> Memberships { get; set; }
         
     }
 }
