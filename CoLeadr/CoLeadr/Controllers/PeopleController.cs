@@ -167,15 +167,15 @@ namespace CoLeadr.Controllers
         //POST: People/AddToGroup 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddMemberToGroup(PersonGroupingViewModel vm)
+        public ActionResult AddMemberToGroup(PersonGroupingViewModel viewmodel)
         {
             if (ModelState.IsValid) 
             {
-                int PersonId = vm.PersonId;
-                int GroupId = vm.SelectedGroupId;
+                int PersonId = viewmodel.PersonId;
+                int GroupId = viewmodel.SelectedGroupId;
                 Person person = db.People.Find(PersonId);
                 Group group = db.Groups.Find(GroupId);
-
+                 
                /* if (group.Members == null)
                 {
                     IList<Person> groupmembers = new List<Person>();
@@ -190,8 +190,15 @@ namespace CoLeadr.Controllers
 
                 db.SaveChanges();
 
-                vm.Memberships = person.Memberships; 
-               return View(vm);
+                PersonGroupingViewModel vm = new PersonGroupingViewModel();
+                SelectList allthegroups = new SelectList(db.Groups, "GroupId", "Name");
+                vm.PersonId = person.PersonId;
+                vm.FirstName = person.FirstName;
+                vm.LastName = person.LastName;
+                vm.Memberships = person.Memberships;
+                vm.AllGroups = allthegroups; 
+
+                return View(vm);
                
             }
 
