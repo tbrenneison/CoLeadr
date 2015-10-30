@@ -14,10 +14,10 @@
     <div>
         <h4>Groups @Html.DisplayFor(model => model.FirstName) is already in:</h4>
         <ul>
-            @foreach (var group in Model.Memberships) //now it doesn't like this
-            {
-                @Html.Display(group.Name) //or this
-            }
+        @foreach(var group in Model.Memberships)
+        {
+            <li>@Html.DisplayFor(model => group.Name) </li>
+        }
         </ul>
     </div>
 

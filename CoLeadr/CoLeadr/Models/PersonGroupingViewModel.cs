@@ -13,10 +13,11 @@ namespace CoLeadr.Models
         public string FirstName { get; set; }
         public string LastName { get; set;}
 
-        public List<Group> Memberships { get; set; }
+        public virtual IList<Group> Memberships { get; set; }
 
         public SelectList AllGroups { get; set; }
         public int SelectedGroupId { get; set; }
+
 
     }
 

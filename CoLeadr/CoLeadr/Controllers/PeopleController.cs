@@ -149,13 +149,17 @@ namespace CoLeadr.Controllers
             viewmodel.LastName = person.LastName;
             viewmodel.AllGroups = allthegroups;
 
-
             //viewmodel.Memberships cannot be empty AND THEY ARE ALWAYS EMPTY
             if (person.Memberships == null)
             {
-                viewmodel.Memberships = new List<Group>();
+                    IList<Group> members = new List<Group>();
+                    viewmodel.Memberships = members; 
             }
-            else { viewmodel.Memberships = person.Memberships; }
+            else
+            {
+                viewmodel.Memberships = person.Memberships;
+ }
+
             
             return View(viewmodel);
             }
@@ -172,20 +176,21 @@ namespace CoLeadr.Controllers
                 Person person = db.People.Find(PersonId);
                 Group group = db.Groups.Find(GroupId);
 
-                if (group.Members == null)
+               /* if (group.Members == null)
                 {
-                    group.Members = new List<Person>();
-                    group.Members.Add(person);
+                    IList<Person> groupmembers = new List<Person>();
+                    groupmembers.Add(person);
+                    group.Members = groupmembers;
                 }
                 else
-                {
+                {*/
                     group.Members.Add(person);
-                }
-
-                person.Memberships = vm.Memberships; 
+               // }
+                
 
                 db.SaveChanges();
 
+                vm.Memberships = person.Memberships; 
                return View(vm);
                
             }
