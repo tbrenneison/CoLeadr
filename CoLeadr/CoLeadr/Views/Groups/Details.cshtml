@@ -13,9 +13,19 @@
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            Members
+        </dt>
+        <dd>
+            <ul>
+                @foreach (var member in Model.Members)
+                {
+                    <li>@Html.DisplayFor(model => member.FirstName) @Html.DisplayFor(model => member.LastName) </li>
+                }
+            </ul>
         </dd>
 
     </dl>

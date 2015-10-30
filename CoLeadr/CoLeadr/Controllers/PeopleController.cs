@@ -220,7 +220,7 @@ namespace CoLeadr.Controllers
             viewmodel.LastName = person.LastName;
             viewmodel.AllGroups = allthegroups;
 
-            //viewmodel.Memberships cannot be empty AND THEY ARE ALWAYS EMPTY
+            //viewmodel.Memberships cannot be empty 
             if (person.Memberships == null)
             {
                 IList<Group> members = new List<Group>();
