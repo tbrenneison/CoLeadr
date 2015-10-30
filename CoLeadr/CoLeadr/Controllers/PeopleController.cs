@@ -175,21 +175,11 @@ namespace CoLeadr.Controllers
                 int GroupId = viewmodel.SelectedGroupId;
                 Person person = db.People.Find(PersonId);
                 Group group = db.Groups.Find(GroupId);
-                 
-               /* if (group.Members == null)
-                {
-                    IList<Person> groupmembers = new List<Person>();
-                    groupmembers.Add(person);
-                    group.Members = groupmembers;
-                }
-                else
-                {*/
-                    group.Members.Add(person);
-               // }
-                
-
+               
+                group.Members.Add(person);
                 db.SaveChanges();
 
+                //create a new viewmodel to pass back to the view with updated memberships (v.important)
                 PersonGroupingViewModel vm = new PersonGroupingViewModel();
                 SelectList allthegroups = new SelectList(db.Groups, "GroupId", "Name");
                 vm.PersonId = person.PersonId;
@@ -205,6 +195,78 @@ namespace CoLeadr.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Something is wrong with the returned viewmodel.");
 
         }
+
+        //GET People/RemoveFromGroup
+        public ActionResult RemoveMemberFromGroup(int? PersonId)
+        {
+
+            if (PersonId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Person person = db.People.Find(PersonId);
+
+            if (person == null)
+            {
+                return HttpNotFound();
+            }
+
+            SelectList allthegroups = new SelectList(db.Groups, "GroupId", "Name");
+
+            PersonGroupingViewModel viewmodel = new PersonGroupingViewModel();
+            viewmodel.PersonId = person.PersonId;
+            viewmodel.FirstName = person.FirstName;
+            viewmodel.LastName = person.LastName;
+            viewmodel.AllGroups = allthegroups;
+
+            //viewmodel.Memberships cannot be empty AND THEY ARE ALWAYS EMPTY
+            if (person.Memberships == null)
+            {
+                IList<Group> members = new List<Group>();
+                viewmodel.Memberships = members;
+            }
+            else
+            {
+                viewmodel.Memberships = person.Memberships;
+            }
+
+
+            return View(viewmodel);
+        }
+
+        //POST: People/AddToGroup 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveMemberFromGroup(PersonGroupingViewModel viewmodel)
+        {
+            if (ModelState.IsValid)
+            {
+                int PersonId = viewmodel.PersonId;
+                int GroupId = viewmodel.SelectedGroupId;
+                Person person = db.People.Find(PersonId);
+                Group group = db.Groups.Find(GroupId);
+
+                group.Members.Remove(person);
+                db.SaveChanges();
+
+                //create a new viewmodel to pass back to the view with updated memberships (v.important)
+                PersonGroupingViewModel vm = new PersonGroupingViewModel();
+                SelectList allthegroups = new SelectList(db.Groups, "GroupId", "Name");
+                vm.PersonId = person.PersonId;
+                vm.FirstName = person.FirstName;
+                vm.LastName = person.LastName;
+                vm.Memberships = person.Memberships;
+                vm.AllGroups = allthegroups;
+
+                return View(vm);
+
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Something is wrong with the returned viewmodel.");
+
+        }
+
 
     }
 }

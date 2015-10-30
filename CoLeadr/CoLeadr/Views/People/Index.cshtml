@@ -56,7 +56,8 @@
             @Html.ActionLink("Edit", "Edit", new { id=item.PersonId }) |
             @Html.ActionLink("Details", "Details", new { id=item.PersonId }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.PersonId }) |
-            @Html.ActionLink("Add To Group", "AddMemberToGroup", new { PersonId = item.PersonId })
+            @Html.ActionLink("Add To Group", "AddMemberToGroup", new { PersonId = item.PersonId }) |
+            @Html.ActionLink("Remove From Group", "RemoveMemberFromGroup", new { PersonId = item.PersonId })
         </td>
     </tr>
 }
