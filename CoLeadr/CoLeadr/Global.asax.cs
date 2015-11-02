@@ -14,7 +14,7 @@ namespace CoLeadr
     {
         protected void Application_Start()
         {
-            // Database.SetInitializer(new DropCreateDatabaseAlways<CoLeadrDBContext>());
+            Database.SetInitializer(new DropCreateDatabaseAlways<CoLeadrDBContext>());
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

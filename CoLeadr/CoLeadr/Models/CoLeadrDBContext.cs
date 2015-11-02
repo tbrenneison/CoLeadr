@@ -24,5 +24,9 @@ namespace CoLeadr.Models
         public System.Data.Entity.DbSet<CoLeadr.Models.Group> Groups { get; set; }
 
         public System.Data.Entity.DbSet<CoLeadr.Models.PersonGroupingViewModel> PersonGroupingViewModels { get; set; }
+
+        public System.Data.Entity.DbSet<CoLeadr.Models.Project> Projects { get; set; }
+
+        public System.Data.Entity.DbSet<CoLeadr.Models.ProjectTask> ProjectTasks { get; set; }
     }
 }
