@@ -158,7 +158,7 @@ namespace CoLeadr.Controllers
             else
             {
                 viewmodel.Memberships = person.Memberships;
- }
+            }
 
             
             return View(viewmodel);
@@ -196,7 +196,7 @@ namespace CoLeadr.Controllers
 
         }
 
-        //GET People/RemoveFromGroup
+        //GET People/RemoveMemberFromGroup
         public ActionResult RemoveMemberFromGroup(int? PersonId)
         {
 
@@ -212,13 +212,20 @@ namespace CoLeadr.Controllers
                 return HttpNotFound();
             }
 
-            SelectList allthegroups = new SelectList(db.Groups, "GroupId", "Name");
+            //create a list of groups the member is already in for the selectlist
+            List<Group> membergroups = new List<Group>(); 
+            foreach(Group group in person.Memberships)
+            {
+                membergroups.Add(group); 
+            }
+
+            SelectList membershipgroups = new SelectList(membergroups, "GroupId", "Name");
 
             PersonGroupingViewModel viewmodel = new PersonGroupingViewModel();
             viewmodel.PersonId = person.PersonId;
             viewmodel.FirstName = person.FirstName;
             viewmodel.LastName = person.LastName;
-            viewmodel.AllGroups = allthegroups;
+            viewmodel.AllGroups = membershipgroups;
 
             //viewmodel.Memberships cannot be empty 
             if (person.Memberships == null)
@@ -235,7 +242,7 @@ namespace CoLeadr.Controllers
             return View(viewmodel);
         }
 
-        //POST: People/AddToGroup 
+        //POST: People/RemoveMemberFromGroup 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RemoveMemberFromGroup(PersonGroupingViewModel viewmodel)
@@ -252,12 +259,20 @@ namespace CoLeadr.Controllers
 
                 //create a new viewmodel to pass back to the view with updated memberships (v.important)
                 PersonGroupingViewModel vm = new PersonGroupingViewModel();
-                SelectList allthegroups = new SelectList(db.Groups, "GroupId", "Name");
+
+                List<Group> membergroups = new List<Group>();
+                foreach (Group g in person.Memberships)
+                {
+                    membergroups.Add(g);
+                }
+
+                SelectList membershipgroups = new SelectList(membergroups, "GroupId", "Name");
+
                 vm.PersonId = person.PersonId;
                 vm.FirstName = person.FirstName;
                 vm.LastName = person.LastName;
                 vm.Memberships = person.Memberships;
-                vm.AllGroups = allthegroups;
+                vm.AllGroups = membershipgroups;
 
                 return View(vm);
 
