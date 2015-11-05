@@ -32,30 +32,73 @@ namespace CoLeadr.Controllers
             {
                 return HttpNotFound();
             }
+
+            Project thisProject = projectTask.Project;
+            ViewBag.ProjectName = thisProject.ProjectName;
+
             return View(projectTask);
         }
 
-        // GET: ProjectTasks/Create
+        // GET: ProjectTasks/Create NEW PROJECT TASK 
         public ActionResult Create()
-        {
+        { 
+
             return View();
         }
 
-        // POST: ProjectTasks/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+         // GET: ProjectTasks/Create FROM PROJECT CREATION 
+         public ActionResult CreateFromProject(int? projectId)
+        {
+            Project thisProject = db.Projects.Find(projectId);
+
+            ProjectTaskViewModel viewmodel = new ProjectTaskViewModel();
+            viewmodel.Project = thisProject;
+
+            ViewBag.ProjectName = thisProject.ProjectName; 
+
+         return View(viewmodel);
+        }
+
+// POST: ProjectTasks/Create
+// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+[HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProjectTaskId,Description,IsComplete")] ProjectTask projectTask)
+        public ActionResult Create([Bind(Include = "SelectedProjectId, ProjectTaskId,Description,IsComplete")] ProjectTask newTask)
+
         {
             if (ModelState.IsValid)
-            {
-                db.ProjectTasks.Add(projectTask);
+            { 
+                db.ProjectTasks.Add(newTask);
                 db.SaveChanges();
+                //it's redirecting to the index after creation so this is working!!!! 11/3
                 return RedirectToAction("Index");
             }
 
-            return View(projectTask);
+            return View();
+        }
+
+        //POST: New Project Task FROM PROJECT CREATION 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateFromProject(ProjectTaskViewModel viewmodel)
+
+        {
+            if (ModelState.IsValid)
+            {
+                ProjectTask newTask = new ProjectTask();
+                newTask.Project = viewmodel.Project;
+                newTask.ProjectTaskId = viewmodel.ProjectTaskId;
+                newTask.Description = viewmodel.Description;
+                newTask.IsComplete = viewmodel.IsComplete; 
+
+                db.ProjectTasks.Add(newTask);
+                db.SaveChanges();
+                //it's redirecting to the index after creation so this is working!!!! 11/3
+                return RedirectToAction("Index");
+            }
+
+            return View();
         }
 
         // GET: ProjectTasks/Edit/5

@@ -189,6 +189,7 @@
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\PersonGroupingViewModel.cs" />
     <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\ProjectCreateViewModel.cs" />
     <Compile Include="Models\ProjectTask.cs" />
     <Compile Include="Models\ProjectTaskViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -262,19 +263,21 @@
     <Content Include="Views\People\AddToGroup.cshtml" />
     <Content Include="Views\People\AddMemberToGroup.cshtml" />
     <Content Include="Views\People\RemoveMemberFromGroup.cshtml" />
-    <Content Include="Views\Projects\Create.cshtml" />
-    <Content Include="Views\Projects\Delete.cshtml" />
-    <Content Include="Views\Projects\Details.cshtml" />
-    <Content Include="Views\Projects\Edit.cshtml" />
-    <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\ProjectTasks\Create.cshtml" />
     <Content Include="Views\ProjectTasks\Delete.cshtml" />
     <Content Include="Views\ProjectTasks\Details.cshtml" />
     <Content Include="Views\ProjectTasks\Edit.cshtml" />
     <Content Include="Views\ProjectTasks\Index.cshtml" />
+    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\Projects\Delete.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\Edit.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\ProjectTasks\CreateFromProject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Shared\EditorTemplates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -29,10 +29,10 @@
             @Html.DisplayFor(modelItem => item.EndDate)
         </td>
         <td>
+            @Html.ActionLink("Add New Task", "CreateFromProject", "ProjectTasks", new { projectId = item.ProjectId}, null) |
             @Html.ActionLink("Edit", "Edit", new { id=item.ProjectId }) |
             @Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProjectId }) |
-            Assigned Members
+            @Html.ActionLink("Delete", "Delete", new { id=item.ProjectId })
         </td>
     </tr>
 }

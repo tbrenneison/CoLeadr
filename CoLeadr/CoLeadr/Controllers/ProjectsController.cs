@@ -38,7 +38,23 @@ namespace CoLeadr.Controllers
         // GET: Projects/Create
         public ActionResult Create()
         {
-            return View();
+            List<Person> allindividuals = new List<Person>(); 
+            foreach(Person p in db.People)
+            {
+                allindividuals.Add(p); 
+            }
+
+            List<Group> allthegroups = new List<Group>(); 
+            foreach(Group g in db.Groups)
+            {
+                allthegroups.Add(g); 
+            }
+
+            ProjectCreateViewModel viewmodel = new ProjectCreateViewModel();
+            viewmodel.allgroups = allthegroups;
+            viewmodel.allpeople = allindividuals;
+
+            return View(viewmodel);
         }
 
         // POST: Projects/Create
@@ -46,16 +62,32 @@ namespace CoLeadr.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProjectId,ProjectName,EndDate")] Project project)
+        public ActionResult Create(ProjectCreateViewModel viewmodel)
+        //public ActionResult Create([Bind(Include = "ProjectId,ProjectName,EndDate,SelectGroupIds")] Project project)
         {
             if (ModelState.IsValid)
             {
+                Project project = new Project();
+                project.ProjectId = viewmodel.ProjectId;
+                project.ProjectName = viewmodel.ProjectName;
+                project.EndDate = viewmodel.EndDate;
+
+                List<Group> assignedGroups = new List<Group>(); 
+                foreach(int selectedGroupId in viewmodel.SelectGroupIds)
+                {
+                    Group thisGroup = db.Groups.Find(selectedGroupId);
+                    assignedGroups.Add(thisGroup); 
+                }
+
+                project.AssignedGroups = assignedGroups; 
+            
                 db.Projects.Add(project);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                //redirect to "add project task" 
+                return RedirectToAction("CreateFromProject","ProjectTasks", new { projectId = project.ProjectId });
             }
 
-            return View(project);
+            return View(viewmodel);
         }
 
         // GET: Projects/Edit/5
