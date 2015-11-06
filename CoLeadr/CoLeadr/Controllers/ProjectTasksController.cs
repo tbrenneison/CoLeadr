@@ -15,9 +15,11 @@ namespace CoLeadr.Controllers
         private CoLeadrDBContext db = new CoLeadrDBContext();
 
         // GET: ProjectTasks
-        public ActionResult Index()
+        public ActionResult Index(int? projectId)
         {
-            return View(db.ProjectTasks.ToList());
+            Project thisProject = db.Projects.Find(projectId);
+            List<ProjectTask> theseTasks = thisProject.ProjectTasks.ToList(); 
+            return View(theseTasks);
         }
 
         // GET: ProjectTasks/Details/5
@@ -52,8 +54,9 @@ namespace CoLeadr.Controllers
             Project thisProject = db.Projects.Find(projectId);
 
             ProjectTaskViewModel viewmodel = new ProjectTaskViewModel();
-            viewmodel.Project = thisProject;
 
+            viewmodel.Project = thisProject;
+            viewmodel.ProjectId = thisProject.ProjectId; 
             ViewBag.ProjectName = thisProject.ProjectName; 
 
          return View(viewmodel);
@@ -64,15 +67,22 @@ namespace CoLeadr.Controllers
 // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SelectedProjectId, ProjectTaskId,Description,IsComplete")] ProjectTask newTask)
-
+        //public ActionResult Create([Bind(Include = "SelectedProjectId, ProjectTaskId,Description,IsComplete")] ProjectTask newTask)
+        public ActionResult Create(ProjectTaskViewModel viewmodel)
         {
             if (ModelState.IsValid)
-            { 
+            {
+                ProjectTask newTask = new ProjectTask();
+                newTask.Description = viewmodel.Description;
+                newTask.IsComplete = viewmodel.IsComplete;
+                newTask.ProjectTaskId = viewmodel.ProjectTaskId;
+
+                newTask.Project = db.Projects.Find(viewmodel.ProjectId);
+                newTask.ProjectId = viewmodel.ProjectId; 
+
                 db.ProjectTasks.Add(newTask);
                 db.SaveChanges();
-                //it's redirecting to the index after creation so this is working!!!! 11/3
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { projectId = newTask.ProjectId });
             }
 
             return View();
@@ -87,15 +97,19 @@ namespace CoLeadr.Controllers
             if (ModelState.IsValid)
             {
                 ProjectTask newTask = new ProjectTask();
-                newTask.Project = viewmodel.Project;
+                newTask.Project = db.Projects.Find(viewmodel.ProjectId);
+                newTask.ProjectId = viewmodel.ProjectId; 
                 newTask.ProjectTaskId = viewmodel.ProjectTaskId;
                 newTask.Description = viewmodel.Description;
-                newTask.IsComplete = viewmodel.IsComplete; 
+                newTask.IsComplete = viewmodel.IsComplete;
+
+                //the project is null.  WHY IS THE PROJECT NULL
+                //do i have to pass in a projectid instead of the project object, probably
 
                 db.ProjectTasks.Add(newTask);
                 db.SaveChanges();
-                //it's redirecting to the index after creation so this is working!!!! 11/3
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Index", new { projectId = newTask.ProjectId});
             }
 
             return View();

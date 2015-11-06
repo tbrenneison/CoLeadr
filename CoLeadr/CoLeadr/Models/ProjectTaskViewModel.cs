@@ -12,6 +12,7 @@ namespace CoLeadr.Models
         [Key]
         public int ProjectTaskId { get; set; }
         public Project Project { get; set; } //one project has many tasks
+        public int ProjectId { get; set; }
         public string Description { get; set; }
         public bool IsComplete { get; set; }
 
