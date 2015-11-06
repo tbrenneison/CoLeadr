@@ -16,6 +16,7 @@
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
+
         <dt>
             Members
         </dt>
@@ -28,6 +29,17 @@
             </ul>
         </dd>
 
+        <dt>
+            Projects
+        </dt>
+        <dd>
+            <ul>
+                @foreach (var project in Model.Projects)
+                {
+                    <li>@Html.DisplayFor(model => project.ProjectName) </li>
+                }
+            </ul>
+        </dd>
     </dl>
 </div>
 <p>
