@@ -18,7 +18,8 @@ namespace CoLeadr.Controllers
         public ActionResult Index(int? projectId)
         {
             Project thisProject = db.Projects.Find(projectId);
-            List<ProjectTask> theseTasks = thisProject.ProjectTasks.ToList(); 
+            List<ProjectTask> theseTasks = thisProject.ProjectTasks.ToList();
+            
             return View(theseTasks);
         }
 
@@ -37,6 +38,7 @@ namespace CoLeadr.Controllers
 
             Project thisProject = projectTask.Project;
             ViewBag.ProjectName = thisProject.ProjectName;
+
 
             return View(projectTask);
         }
@@ -103,9 +105,6 @@ namespace CoLeadr.Controllers
                 newTask.Description = viewmodel.Description;
                 newTask.IsComplete = viewmodel.IsComplete;
 
-                //the project is null.  WHY IS THE PROJECT NULL
-                //do i have to pass in a projectid instead of the project object, probably
-
                 db.ProjectTasks.Add(newTask);
                 db.SaveChanges();
 
@@ -123,11 +122,22 @@ namespace CoLeadr.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ProjectTask projectTask = db.ProjectTasks.Find(id);
+
             if (projectTask == null)
             {
                 return HttpNotFound();
             }
-            return View(projectTask);
+
+            Project thisProject = db.Projects.Find(projectTask.ProjectId);
+
+            ProjectTaskViewModel viewmodel = new ProjectTaskViewModel();
+            viewmodel.Project = thisProject;
+            viewmodel.ProjectId = thisProject.ProjectId;
+            viewmodel.Description = projectTask.Description;
+            viewmodel.IsComplete = projectTask.IsComplete;
+            viewmodel.ProjectTaskId = projectTask.ProjectTaskId; 
+
+            return View(viewmodel);
         }
 
         // POST: ProjectTasks/Edit/5
@@ -135,15 +145,24 @@ namespace CoLeadr.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProjectTaskId,Description,IsComplete")] ProjectTask projectTask)
+       //public ActionResult Edit([Bind(Include = "ProjectTaskId,Description,IsComplete")] ProjectTask projectTask)
+       public ActionResult Edit(ProjectTaskViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
+                ProjectTask projectTask = db.ProjectTasks.Find(viewmodel.ProjectTaskId); 
+                projectTask.Description = viewmodel.Description;
+                projectTask.IsComplete = viewmodel.IsComplete;
+                projectTask.Project = viewmodel.Project;
+                projectTask.ProjectId = viewmodel.ProjectId;
+                projectTask.ProjectTaskId = viewmodel.ProjectTaskId; 
+                
+                
                 db.Entry(projectTask).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { projectId = projectTask.ProjectId});
             }
-            return View(projectTask);
+            return View(viewmodel);
         }
 
         // GET: ProjectTasks/Delete/5
@@ -169,7 +188,7 @@ namespace CoLeadr.Controllers
             ProjectTask projectTask = db.ProjectTasks.Find(id);
             db.ProjectTasks.Remove(projectTask);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { projectId = projectTask.ProjectId });
         }
 
         protected override void Dispose(bool disposing)
