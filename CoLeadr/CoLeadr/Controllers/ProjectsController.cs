@@ -72,17 +72,51 @@ namespace CoLeadr.Controllers
                 project.ProjectName = viewmodel.ProjectName;
                 project.EndDate = viewmodel.EndDate;
 
-                List<Group> assignedGroups = new List<Group>(); 
-                foreach(int selectedGroupId in viewmodel.SelectGroupIds)
+                List<Group> assignedGroups = new List<Group>();
+                List<Person> assignedIndividuals = new List<Person>();
+
+                if (viewmodel.SelectGroupIds != null)
                 {
-                    Group thisGroup = db.Groups.Find(selectedGroupId);
-                    assignedGroups.Add(thisGroup); 
+                    //add assigned groups to project 
+                    foreach (int selectedGroupId in viewmodel.SelectGroupIds)
+                    {
+                        Group thisGroup = db.Groups.Find(selectedGroupId);
+                        assignedGroups.Add(thisGroup);
+                    }
+
+                    //add individuals from groups to project 
+                    List<Person> groupMembersToAdd = new List<Person>();
+                    foreach (Group group in assignedGroups)
+                    {
+                        foreach (Person member in group.Members)
+                        {
+                            groupMembersToAdd.Add(member);
+                        }
+                    }
+
+                    foreach (Person member in groupMembersToAdd)
+                    {
+                        assignedIndividuals.Add(member);
+                    }
                 }
 
-                project.AssignedGroups = assignedGroups; 
-            
+                if (viewmodel.SelectPeopleIds != null)
+                {
+                    //add separately assigned individuals to project 
+                    foreach (int selectedPersonId in viewmodel.SelectPeopleIds)
+                    {
+                        Person thisPerson = db.People.Find(selectedPersonId);
+                        assignedIndividuals.Add(thisPerson);
+                    }
+                }
+
+                //assign all the groups and individuals and add changes
+                project.AssignedGroups = assignedGroups;
+                project.AssignedIndividuals = assignedIndividuals;
+
                 db.Projects.Add(project);
                 db.SaveChanges();
+
                 //redirect to "add project task" 
                 return RedirectToAction("CreateFromProject","ProjectTasks", new { projectId = project.ProjectId });
             }

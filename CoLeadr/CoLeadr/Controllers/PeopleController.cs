@@ -171,6 +171,7 @@ namespace CoLeadr.Controllers
         {
             if (ModelState.IsValid) 
             {
+                //add the person to the group
                 int PersonId = viewmodel.PersonId;
                 int GroupId = viewmodel.SelectedGroupId;
                 Person person = db.People.Find(PersonId);

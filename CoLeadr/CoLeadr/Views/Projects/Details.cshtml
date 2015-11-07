@@ -32,9 +32,20 @@
         <dd>
             @foreach (var group in Model.AssignedGroups)
             {
-            @group.Name; 
+                @group.Name;
             }
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AssignedIndividuals)
+        </dt>
+
+        <dd>
+            @foreach (var person in Model.AssignedIndividuals)
+            {
+                @person.FirstName @person.LastName
+            }
+        </dd>
+
 
     </dl>
 </div>

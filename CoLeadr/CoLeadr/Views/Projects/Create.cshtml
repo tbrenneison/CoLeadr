@@ -43,6 +43,20 @@
             </div>
         </div>
 
+        
+        <div class="form-group">
+            CURRENTLY THIS IS BAD, DO NOT USE IT, IT IS JUST HERE FOR SHOW, DO NOT USE IT BECAUSE YOU WILL POTENTIALLY ADD SOMEONE TO A PROJECT TWICE IF THEY ARE IN A GROUP
+            @Html.LabelFor(model => model.allpeople, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @foreach (var p in Model.allpeople)
+                {
+                    <label class="checkbox">
+                        <input type="checkbox" name="SelectPeopleIds" value="@p.PersonId"> @p.FirstName @p.LastName
+                    </label>
+                }
+            </div>
+        </div>
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
