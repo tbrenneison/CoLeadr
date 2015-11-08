@@ -11,9 +11,14 @@ namespace CoLeadr.Models
     {
         [Key]
         public int ProjectTaskId { get; set; }
+
+        [Display(Name = "Project")]
         public Project Project { get; set; } //one project has many tasks
         public int ProjectId { get; set; }
+
+        [Display(Name = "Description")]
         public string Description { get; set; }
+        [Display(Name = "Completed?")]
         public bool IsComplete { get; set; }
 
         public IList<Person> PeopleCompleting { get; set; }
