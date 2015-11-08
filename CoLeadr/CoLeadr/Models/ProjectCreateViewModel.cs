@@ -13,7 +13,8 @@ namespace CoLeadr.Models
         public string EndDate { get; set; } //change to datetime with picker at later date
 
 
-        public virtual ICollection<Person> AssignedIndividuals { get; set; }
+        public virtual ICollection<Person> AssignedGroupMembers { get; set; }
+        public virtual ICollection<Person> AdditionalAssignedIndividuals { get; set; }
         public virtual ICollection<Group> AssignedGroups { get; set; }
 
         public List<Person> allpeople { get; set; }

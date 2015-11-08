@@ -36,11 +36,11 @@
             }
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.AssignedIndividuals)
+            @Html.DisplayNameFor(model => model.AssignedGroupMembers)
         </dt>
 
         <dd>
-            @foreach (var person in Model.AssignedIndividuals)
+            @foreach (var person in Model.AssignedGroupMembers)
             {
                 @person.FirstName @person.LastName
             }

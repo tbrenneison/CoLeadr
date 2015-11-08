@@ -10,11 +10,15 @@ namespace CoLeadr.Models
         public int ProjectId { get; set; }
         public string ProjectName { get; set; }
         public string EndDate { get; set; } //change to datetime with picker at later date
-        public IList<string> Reminders { get; set; }
+        
+        //also allow for notes at a later date 
         public IList<string> Notes { get; set; }
-        //figure out reminder functionality at later date as well 
 
-        public virtual ICollection<Person> AssignedIndividuals { get; set; }
+        //figure out reminder functionality at later date as well 
+        public IList<string> Reminders { get; set; }
+
+        public virtual ICollection<Person> AssignedGroupMembers { get; set; }
+        public virtual ICollection<Person> AdditionalAssignedIndividuals { get; set; }
         public virtual ICollection<Group> AssignedGroups { get; set; }
         public virtual ICollection<ProjectTask> ProjectTasks { get; set; }
 

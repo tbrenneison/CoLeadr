@@ -73,7 +73,8 @@ namespace CoLeadr.Controllers
                 project.EndDate = viewmodel.EndDate;
 
                 List<Group> assignedGroups = new List<Group>();
-                List<Person> assignedIndividuals = new List<Person>();
+                List<Person> assignedGroupMembers = new List<Person>();
+                List<Person> additionalMembers = new List<Person>();
 
                 if (viewmodel.SelectGroupIds != null)
                 {
@@ -96,7 +97,7 @@ namespace CoLeadr.Controllers
 
                     foreach (Person member in groupMembersToAdd)
                     {
-                        assignedIndividuals.Add(member);
+                        assignedGroupMembers.Add(member);
                     }
                 }
 
@@ -106,13 +107,14 @@ namespace CoLeadr.Controllers
                     foreach (int selectedPersonId in viewmodel.SelectPeopleIds)
                     {
                         Person thisPerson = db.People.Find(selectedPersonId);
-                        assignedIndividuals.Add(thisPerson);
+                        additionalMembers.Add(thisPerson);
                     }
                 }
 
                 //assign all the groups and individuals and add changes
                 project.AssignedGroups = assignedGroups;
-                project.AssignedIndividuals = assignedIndividuals;
+                project.AssignedGroupMembers = assignedGroupMembers;
+                project.AdditionalAssignedIndividuals = additionalMembers; 
 
                 db.Projects.Add(project);
                 db.SaveChanges();
