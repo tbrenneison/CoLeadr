@@ -1,4 +1,4 @@
-﻿@model CoLeadr.Models.Project
+﻿@model CoLeadr.Models.ProjectViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -11,11 +11,11 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ProjectName)
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ProjectName)
+            @Html.DisplayFor(model => model.Name)
         </dd>
 
         <dt>
@@ -25,26 +25,28 @@
         <dd>
             @Html.DisplayFor(model => model.EndDate)
         </dd>
+
         <dt>
-            @Html.DisplayNameFor(model => model.AssignedGroups)
+            @Html.DisplayNameFor(model => model.ProjectGroups)
         </dt>
 
         <dd>
-            @foreach (var group in Model.AssignedGroups)
+            @foreach (var group in Model.ProjectGroups)
             {
-                @group.Name;
+                @group.Name 
             }
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.AssignedGroupMembers)
-        </dt>
 
+        <dt>
+            Project Members
+        </dt>
         <dd>
-            @foreach (var person in Model.AssignedGroupMembers)
+            @foreach(var member in Model.ProjectMembers)
             {
-                @person.FirstName @person.LastName
+                @member.FirstName @member.LastName
             }
         </dd>
+   
 
 
     </dl>

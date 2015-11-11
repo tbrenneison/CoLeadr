@@ -6,7 +6,7 @@ using System.Web;
 
 namespace CoLeadr.Models
 {
-    public class ProjectCreateViewModel
+    public class ProjectViewModel
     {
         [Key]
         public int ProjectId { get; set; }
@@ -15,12 +15,11 @@ namespace CoLeadr.Models
         [Display(Name = "End Date")]
         public string EndDate { get; set; }
 
-        [Display(Name = "All Available Groups")]
-        public List<Group> AllGroups { get; set; }
-        [Display(Name = "All Available Members")]
-        public List<Person> AllPeople { get; set; }
-        public int[] SelectedGroupIds { get; set; }
-        public int[] SelectedPersonIds { get; set; }
+        [Display(Name = "Groups")]
+        public virtual ICollection<Group> ProjectGroups { get; set; }
+
+        [Display(Name = "Project Members")]
+        public virtual ICollection<Person> ProjectMembers { get; set; }
 
 
 

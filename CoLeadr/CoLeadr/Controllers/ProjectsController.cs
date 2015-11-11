@@ -32,27 +32,43 @@ namespace CoLeadr.Controllers
             {
                 return HttpNotFound();
             }
-            return View(project);
+
+            //new viewmodel
+            ProjectViewModel viewmodel = new ProjectViewModel();
+            viewmodel.Name = project.Name;
+            viewmodel.EndDate = project.EndDate;
+            viewmodel.ProjectGroups = project.ProjectGroups;
+
+            List<Person> projectmembers = new List<Person>();
+            foreach(PersonProjectRecord record in project.PersonProjectRecords)
+            {
+                Person person = db.People.Find(record.PersonId);
+                projectmembers.Add(person);
+            }
+            viewmodel.ProjectMembers = projectmembers;
+
+            return View(viewmodel);
+
         }
 
         // GET: Projects/Create
         public ActionResult Create()
         {
-            List<Person> allindividuals = new List<Person>(); 
-            foreach(Person p in db.People)
-            {
-                allindividuals.Add(p); 
-            }
+            ProjectCreateViewModel viewmodel = new ProjectCreateViewModel();
+            List<Group> allgroups = new List<Group>();
+            List<Person> allpeople = new List<Person>(); 
 
-            List<Group> allthegroups = new List<Group>(); 
             foreach(Group g in db.Groups)
             {
-                allthegroups.Add(g); 
+                allgroups.Add(g);
+            }
+            foreach(Person p in db.People)
+            {
+                allpeople.Add(p); 
             }
 
-            ProjectCreateViewModel viewmodel = new ProjectCreateViewModel();
-            viewmodel.allgroups = allthegroups;
-            viewmodel.allpeople = allindividuals;
+            viewmodel.AllGroups = allgroups;
+            viewmodel.AllPeople = allpeople;
 
             return View(viewmodel);
         }
@@ -62,65 +78,51 @@ namespace CoLeadr.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "ProjectId,Name,EndDate")] Project project)
         public ActionResult Create(ProjectCreateViewModel viewmodel)
-        //public ActionResult Create([Bind(Include = "ProjectId,ProjectName,EndDate,SelectGroupIds")] Project project)
         {
             if (ModelState.IsValid)
             {
                 Project project = new Project();
-                project.ProjectId = viewmodel.ProjectId;
-                project.ProjectName = viewmodel.ProjectName;
+                //add stuff to project 
                 project.EndDate = viewmodel.EndDate;
+                project.Name = viewmodel.Name;
+                project.ProjectId = viewmodel.ProjectId;
 
-                List<Group> assignedGroups = new List<Group>();
-                List<Person> assignedGroupMembers = new List<Person>();
-                List<Person> additionalMembers = new List<Person>();
-
-                if (viewmodel.SelectGroupIds != null)
+                //add project groups
+                List<Group> projectgroups = new List<Group>(); 
+                foreach(int groupId in viewmodel.SelectedGroupIds)
                 {
-                    //add assigned groups to project 
-                    foreach (int selectedGroupId in viewmodel.SelectGroupIds)
-                    {
-                        Group thisGroup = db.Groups.Find(selectedGroupId);
-                        assignedGroups.Add(thisGroup);
-                    }
+                    Group group = db.Groups.Find(groupId);
+                    projectgroups.Add(group); 
+                }
+                project.ProjectGroups = projectgroups;
 
-                    //add individuals from groups to project 
-                    List<Person> groupMembersToAdd = new List<Person>();
-                    foreach (Group group in assignedGroups)
-                    {
-                        foreach (Person member in group.Members)
-                        {
-                            groupMembersToAdd.Add(member);
-                        }
-                    }
+                //create personprojectrecords for individual project memberships
 
-                    foreach (Person member in groupMembersToAdd)
+                List<PersonProjectRecord> newrecords = new List<PersonProjectRecord>(); 
+                foreach(Group group in projectgroups)
+                {
+                    foreach(Person member in group.Members)
                     {
-                        assignedGroupMembers.Add(member);
+                        PersonProjectRecord newrecord = new PersonProjectRecord();
+                        newrecord.PersonId = member.PersonId;
+                        newrecord.ProjectId = project.ProjectId;
+                        newrecord.RemoveWithGroup = true;
+                        newrecords.Add(newrecord); 
                     }
                 }
+                
 
-                if (viewmodel.SelectPeopleIds != null)
+                //save to db
+                foreach(PersonProjectRecord record in newrecords)
                 {
-                    //add separately assigned individuals to project 
-                    foreach (int selectedPersonId in viewmodel.SelectPeopleIds)
-                    {
-                        Person thisPerson = db.People.Find(selectedPersonId);
-                        additionalMembers.Add(thisPerson);
-                    }
+                    db.PersonProjectRecords.Add(record);
                 }
-
-                //assign all the groups and individuals and add changes
-                project.AssignedGroups = assignedGroups;
-                project.AssignedGroupMembers = assignedGroupMembers;
-                project.AdditionalAssignedIndividuals = additionalMembers; 
 
                 db.Projects.Add(project);
                 db.SaveChanges();
-
-                //redirect to "add project task" 
-                return RedirectToAction("CreateFromProject","ProjectTasks", new { projectId = project.ProjectId });
+                return RedirectToAction("Index");
             }
 
             return View(viewmodel);
@@ -146,7 +148,7 @@ namespace CoLeadr.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProjectId,ProjectName,EndDate")] Project project)
+        public ActionResult Edit([Bind(Include = "ProjectId,Name,EndDate")] Project project)
         {
             if (ModelState.IsValid)
             {

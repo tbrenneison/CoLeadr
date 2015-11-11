@@ -180,15 +180,7 @@ namespace CoLeadr.Controllers
                 group.Members.Add(person);
                 db.SaveChanges();
 
-                //if the person is not already in the member lists for group's projects, add them 
-                foreach(Project project in group.Projects)
-                {
-                    if (project.AssignedGroupMembers.Contains(person) == false)
-                    {
-                        project.AssignedGroupMembers.Add(person);
-                        db.SaveChanges();
-                    }
-                }
+ 
 
                 //create a new viewmodel to pass back to the view with updated memberships (v.important)
                 PersonGroupingViewModel vm = new PersonGroupingViewModel();
@@ -268,15 +260,6 @@ namespace CoLeadr.Controllers
                 group.Members.Remove(person);
                 db.SaveChanges();
 
-                //if the person is in the member lists for group's projects, remove them 
-                foreach (Project project in group.Projects)
-                {
-                    if (project.AssignedGroupMembers.Contains(person))
-                    {
-                        project.AssignedGroupMembers.Remove(person);
-                        db.SaveChanges();
-                    }
-                }
 
                 //create a new viewmodel to pass back to the view with updated memberships (v.important)
                 PersonGroupingViewModel vm = new PersonGroupingViewModel();

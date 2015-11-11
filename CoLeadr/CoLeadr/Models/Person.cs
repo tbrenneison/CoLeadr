@@ -26,6 +26,9 @@ namespace CoLeadr.Models
 
         [Display(Name = "Group Memberships")]
         public virtual IList<Group> Memberships { get; set; }
+
+        public virtual ICollection<PersonProjectRecord> PersonProjectRecords { get; set; }
+        
         
     }
 }

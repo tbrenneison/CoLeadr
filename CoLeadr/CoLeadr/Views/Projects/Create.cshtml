@@ -16,10 +16,10 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.ProjectName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -32,31 +32,18 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.allgroups, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.AllGroups, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @foreach (var g in Model.allgroups)
+                
+                @foreach(var group in Model.AllGroups)
                 {
-                    <label class="checkbox">
-                        <input type="checkbox" name="SelectGroupIds" value="@g.GroupId"> @g.Name
-                    </label>
+                   <input type="checkbox" name="SelectedGroupIds" value="@group.GroupId">
+                    <label for="@group.GroupId">@group.Name</label>
                 }
             </div>
         </div>
 
-        
-        <div class="form-group">
-            CURRENTLY THIS IS BAD, DO NOT USE IT, IT IS JUST HERE FOR SHOW, DO NOT USE IT BECAUSE YOU WILL POTENTIALLY ADD SOMEONE TO A PROJECT TWICE IF THEY ARE IN A GROUP
-            @Html.LabelFor(model => model.allpeople, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @foreach (var p in Model.allpeople)
-                {
-                    <label class="checkbox">
-                        <input type="checkbox" name="SelectPeopleIds" value="@p.PersonId"> @p.FirstName @p.LastName
-                    </label>
-                }
-            </div>
-        </div>
-
+     
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

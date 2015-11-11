@@ -27,8 +27,8 @@ namespace CoLeadr.Models
 
         public System.Data.Entity.DbSet<CoLeadr.Models.Project> Projects { get; set; }
 
-        public System.Data.Entity.DbSet<CoLeadr.Models.ProjectTask> ProjectTasks { get; set; }
+        public System.Data.Entity.DbSet<CoLeadr.Models.PersonProjectRecord> PersonProjectRecords { get; set; }
 
-        public System.Data.Entity.DbSet<CoLeadr.Models.ProjectTaskViewModel> ProjectTaskViewModels { get; set; }
+
     }
 }
