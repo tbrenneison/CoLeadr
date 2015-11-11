@@ -84,40 +84,59 @@ namespace CoLeadr.Controllers
             if (ModelState.IsValid)
             {
                 Project project = new Project();
-                //add stuff to project 
+                //add basic stuff to project 
                 project.EndDate = viewmodel.EndDate;
                 project.Name = viewmodel.Name;
                 project.ProjectId = viewmodel.ProjectId;
 
-                //add project groups
-                List<Group> projectgroups = new List<Group>(); 
-                foreach(int groupId in viewmodel.SelectedGroupIds)
-                {
-                    Group group = db.Groups.Find(groupId);
-                    projectgroups.Add(group); 
-                }
-                project.ProjectGroups = projectgroups;
+                List<PersonProjectRecord> newrecords = new List<PersonProjectRecord>();
 
-                //create personprojectrecords for individual project memberships
-
-                List<PersonProjectRecord> newrecords = new List<PersonProjectRecord>(); 
-                foreach(Group group in projectgroups)
+                //add project groups if there are selected groups
+                if (viewmodel.SelectedGroupIds != null)
                 {
-                    foreach(Person member in group.Members)
+                    List<Group> projectgroups = new List<Group>();
+                    foreach (int groupId in viewmodel.SelectedGroupIds)
                     {
-                        PersonProjectRecord newrecord = new PersonProjectRecord();
-                        newrecord.PersonId = member.PersonId;
-                        newrecord.ProjectId = project.ProjectId;
-                        newrecord.RemoveWithGroup = true;
-                        newrecords.Add(newrecord); 
+                        Group group = db.Groups.Find(groupId);
+                        projectgroups.Add(group);
+                    }
+                    project.ProjectGroups = projectgroups;
+
+                    //create personprojectrecords for individuals added through groups
+                    foreach (Group group in projectgroups)
+                    {
+                        foreach (Person member in group.Members)
+                        {
+                            PersonProjectRecord newrecord = new PersonProjectRecord();
+                            newrecord.PersonId = member.PersonId;
+                            newrecord.ProjectId = project.ProjectId;
+                            newrecord.RemoveWithGroup = true;
+                            newrecords.Add(newrecord);
+                        }
                     }
                 }
-                
+
+                //create personprojectrecords for individuals added outside of groups
+                if (viewmodel.SelectedPersonIds != null)
+                {
+                    foreach (int id in viewmodel.SelectedPersonIds)
+                    {
+                        PersonProjectRecord newrecord = new PersonProjectRecord();
+                        newrecord.PersonId = id;
+                        newrecord.ProjectId = project.ProjectId;
+                        newrecord.RemoveWithGroup = false;
+                        newrecords.Add(newrecord);
+                    }
+                }
+
 
                 //save to db
-                foreach(PersonProjectRecord record in newrecords)
+                if (newrecords.Count != 0)
                 {
-                    db.PersonProjectRecords.Add(record);
+                    foreach (PersonProjectRecord record in newrecords)
+                    {
+                        db.PersonProjectRecords.Add(record);
+                    }
                 }
 
                 db.Projects.Add(project);

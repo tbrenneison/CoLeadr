@@ -43,6 +43,19 @@
             </div>
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.AllPeople, htmlAttributes: new { @class = "control-label col-md-2" })
+            Right now DO NOT USE THIS because you will potentially add someone to a project twice 
+            <div class="col-md-10">
+
+                @foreach (var person in Model.AllPeople)
+                {
+                    <input type="checkbox" name="SelectedPersonIds" value="@person.PersonId">
+                    <label for="@person.PersonId">@person.FirstName @person.LastName</label>
+                }
+            </div>
+        </div>
+
      
 
         <div class="form-group">
