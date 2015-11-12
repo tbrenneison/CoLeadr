@@ -50,7 +50,7 @@
 
                 @foreach (var person in Model.AllPeople)
                 {
-                    <input type="checkbox" name="SelectedPersonIds" value="@person.PersonId">
+                    <input class="personcheckbox" type="checkbox" name="SelectedPersonIds" value="@person.PersonId">
                     <label for="@person.PersonId">@person.FirstName @person.LastName</label>
                 }
             </div>

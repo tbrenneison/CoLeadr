@@ -180,6 +180,31 @@ namespace CoLeadr.Controllers
                 group.Members.Add(person);
                 db.SaveChanges();
 
+                //add person to group's projects & create ppr with removewithgroup = true
+                List<Person> isingroupalready = new List<Person>();
+                foreach(Project project in group.Projects) //for every project the group is assigned to
+                {
+                    foreach(PersonProjectRecord ppr in project.PersonProjectRecords) //for every ppr on the project
+                    {
+                        //if they are already on the project and their rwg flag is false add them to this list
+                        if (ppr.PersonId == person.PersonId && ppr.RemoveWithGroup == false)
+                        {
+                            isingroupalready.Add(person);
+                        }
+                    }
+                    //if the list is empty (person not already in group  w/ false rwg flag) 
+                    //then make a new ppr and add them to project with true rwg flag 
+                    if(isingroupalready.Count == 0)
+                    {
+                        PersonProjectRecord newrecord = new PersonProjectRecord();
+                        newrecord.PersonId = person.PersonId;
+                        newrecord.ProjectId = project.ProjectId;
+                        newrecord.RemoveWithGroup = true;
+
+                        db.PersonProjectRecords.Add(newrecord); 
+                    }
+                }
+                db.SaveChanges(); 
  
 
                 //create a new viewmodel to pass back to the view with updated memberships (v.important)
@@ -252,6 +277,7 @@ namespace CoLeadr.Controllers
         {
             if (ModelState.IsValid)
             {
+                //remove the person from the group
                 int PersonId = viewmodel.PersonId;
                 int GroupId = viewmodel.SelectedGroupId;
                 Person person = db.People.Find(PersonId);
@@ -259,6 +285,28 @@ namespace CoLeadr.Controllers
 
                 group.Members.Remove(person);
                 db.SaveChanges();
+
+                //remove from projects if removewithgroup flag is true
+                List<PersonProjectRecord> pprstoremove = new List<PersonProjectRecord>(); 
+                foreach(Project project in group.Projects) //for each project in the group
+                {
+                    foreach(PersonProjectRecord ppr in project.PersonProjectRecords) //search pprs in the project
+                    {
+                        if(ppr.PersonId == person.PersonId && ppr.RemoveWithGroup == true)
+                        {
+                            //add this person's pprs where rwg = true to a list 
+                            pprstoremove.Add(ppr);
+                        }
+                    }
+                }
+                //you've got to remove them this way (via list) because otherwise messes with the enumerator 
+                //hella exceptions
+                foreach(PersonProjectRecord ppr in pprstoremove)
+                {
+                    db.PersonProjectRecords.Remove(ppr); 
+                }
+
+                db.SaveChanges(); 
 
 
                 //create a new viewmodel to pass back to the view with updated memberships (v.important)
