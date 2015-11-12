@@ -14,10 +14,20 @@ namespace CoLeadr.Models
         // automatically whenever you change your model schema, please use data migrations.
         // For more information refer to the documentation:
         // http://msdn.microsoft.com/en-us/data/jj591621.aspx
-    
+
         public CoLeadrDBContext() : base("name=CoLeadrDBContext")
-        {
-        }
+        { }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+             {
+                //ihavenoideawhatimdoing.jpg
+                modelBuilder.Entity<Project>()
+                .HasMany(t => t.ProjectTasks)
+                .WithRequired(p => p.Project)
+                .Map(k => k.MapKey("ProjectId"))
+                .WillCascadeOnDelete(false);
+              }
+        
 
         public System.Data.Entity.DbSet<CoLeadr.Models.Person> People { get; set; }
 
@@ -29,6 +39,8 @@ namespace CoLeadr.Models
 
         public System.Data.Entity.DbSet<CoLeadr.Models.PersonProjectRecord> PersonProjectRecords { get; set; }
 
+        public System.Data.Entity.DbSet<CoLeadr.Models.ProjectTask> ProjectTasks { get; set; }
 
+        public System.Data.Entity.DbSet<CoLeadr.Models.ProjectTaskViewModel> ProjectTaskViewModels { get; set; }
     }
 }
