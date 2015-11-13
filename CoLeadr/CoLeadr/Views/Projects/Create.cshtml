@@ -31,36 +31,51 @@
             </div>
         </div>
 
+
         <div class="form-group">
-            @Html.LabelFor(model => model.AllGroups, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="button" id="addmemberbutton" class="btn btn-default">Add Groups &amp; Members</button>
+            </div>
+        </div>
+
+        <hr />
+        <div id="addgroupsandmembers">
+             <div class="form-group">
+             @Html.LabelFor(model => model.AllGroups, htmlAttributes: new { @class = "control-label col-md-2" })
+                  <div class="col-md-10">
                 
                 @foreach(var group in Model.AllGroups)
                 {
                    <input type="checkbox" name="SelectedGroupIds" value="@group.GroupId">
                     <label for="@group.GroupId">@group.Name</label>
                 }
-            </div>
-        </div>
+                    </div>
+             </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.AllPeople, htmlAttributes: new { @class = "control-label col-md-2" })
-            Right now DO NOT USE THIS because you will potentially add someone to a project twice 
-            <div class="col-md-10">
+             <div class="form-group">
+                @Html.LabelFor(model => model.AllPeople, htmlAttributes: new { @class = "control-label col-md-2" })
+                Right now DO NOT USE THIS because you will potentially add someone to a project twice
+                <div class="col-md-10">
 
-                @foreach (var person in Model.AllPeople)
+                    @foreach (var person in Model.AllPeople)
                 {
-                    <input class="personcheckbox" type="checkbox" name="SelectedPersonIds" value="@person.PersonId">
-                    <label for="@person.PersonId">@person.FirstName @person.LastName</label>
-                }
-            </div>
-        </div>
-
-     
+                        <input class="personcheckbox" type="checkbox" name="SelectedPersonIds" value="@person.PersonId">
+                        <label for="@person.PersonId">@person.FirstName @person.LastName</label>
+                    }
+                </div>
+               </div>
+            <hr />
+       </div> 
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <button type="button" id="addtaskbutton" class="btn btn-default">Right Now This Button Does Nothing</button>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create Project" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -73,3 +88,13 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<script>
+    $(document).ready(
+        $("#addgroupsandmembers").hide())
+
+    $(document).ready(
+        $("#addmemberbutton").click(function () {
+            $("#addgroupsandmembers").toggle(); 
+        }))
+</script>
