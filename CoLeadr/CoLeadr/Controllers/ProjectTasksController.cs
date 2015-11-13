@@ -36,7 +36,7 @@ namespace CoLeadr.Controllers
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Projects");
             }
         }
 
