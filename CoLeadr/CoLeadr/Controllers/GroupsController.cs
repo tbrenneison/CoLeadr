@@ -110,6 +110,26 @@ namespace CoLeadr.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Group group = db.Groups.Find(id);
+
+            //go through group projects and remove members whose removewithgroup flag = true from projects
+            List<PersonProjectRecord> memberstoremove = new List<PersonProjectRecord>(); 
+            foreach(Project project in group.Projects)
+            {
+                foreach(PersonProjectRecord record in project.PersonProjectRecords)
+                {
+                    if(record.RemoveWithGroup == true)
+                    {
+                        memberstoremove.Add(record);
+                    }
+                }
+            }
+            //you've got to remove them this way (via list) because otherwise messes with the enumerator 
+            //hella exceptions
+            foreach (PersonProjectRecord ppr in memberstoremove)
+            {
+                db.PersonProjectRecords.Remove(ppr);
+            }
+       
             db.Groups.Remove(group);
             db.SaveChanges();
             return RedirectToAction("Index");

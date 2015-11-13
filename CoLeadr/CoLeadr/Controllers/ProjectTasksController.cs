@@ -24,12 +24,20 @@ namespace CoLeadr.Controllers
         public ActionResult TaskIndexForProject(int? projectId)
         {
             Project thisproject = db.Projects.Find(projectId);
-            List<ProjectTask> alltasksforproject = new List<ProjectTask>(); 
-            foreach(ProjectTask ptask in thisproject.ProjectTasks)
+            ViewBag.ProjectName = thisproject.Name;
+            List<ProjectTask> alltasksforproject = new List<ProjectTask>();
+            if (thisproject.ProjectTasks.Count != 0)
             {
-                alltasksforproject.Add(ptask); 
+                foreach (ProjectTask ptask in thisproject.ProjectTasks)
+                {
+                    alltasksforproject.Add(ptask);
+                }
+                return View(alltasksforproject);
             }
-            return View(alltasksforproject);
+            else
+            {
+                return View();
+            }
         }
 
 
@@ -48,8 +56,10 @@ namespace CoLeadr.Controllers
             ProjectTaskViewModel viewmodel = new ProjectTaskViewModel();
             Project thisproject = projectTask.Project;
             viewmodel.ProjectName = thisproject.Name;
+            viewmodel.ProjectId = thisproject.ProjectId;
             viewmodel.Description = projectTask.Description;
-            viewmodel.IsComplete = projectTask.IsComplete; 
+            viewmodel.IsComplete = projectTask.IsComplete;
+            viewmodel.ProjectTaskId = projectTask.ProjectTaskId;
             return View(viewmodel);
         }
 
@@ -100,7 +110,13 @@ namespace CoLeadr.Controllers
             {
                 return HttpNotFound();
             }
-            return View(projectTask);
+            ProjectTaskViewModel viewmodel = new ProjectTaskViewModel();
+            viewmodel.Description = projectTask.Description;
+            viewmodel.IsComplete = projectTask.IsComplete;
+            viewmodel.ProjectTaskId = projectTask.ProjectTaskId;
+            Project thisproject = projectTask.Project;
+            viewmodel.ProjectId = thisproject.ProjectId; 
+            return View(viewmodel);
         }
 
         // POST: ProjectTasks/Edit/5
@@ -108,15 +124,20 @@ namespace CoLeadr.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProjectTaskId,Description,IsComplete")] ProjectTask projectTask)
+        //public ActionResult Edit([Bind(Include = "ProjectTaskId,Description,IsComplete")] ProjectTask projectTask)
+        public ActionResult Edit(ProjectTaskViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(projectTask).State = EntityState.Modified;
+                ProjectTask thisprojecttask = db.ProjectTasks.Find(viewmodel.ProjectTaskId);
+                thisprojecttask.Description = viewmodel.Description;
+                thisprojecttask.IsComplete = viewmodel.IsComplete;
+
+                db.Entry(thisprojecttask).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("TaskIndexForProject", new { projectId = viewmodel.ProjectId});
             }
-            return View(projectTask);
+            return View(viewmodel);
         }
 
         // GET: ProjectTasks/Delete/5

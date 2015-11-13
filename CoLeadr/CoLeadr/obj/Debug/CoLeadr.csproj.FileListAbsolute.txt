@@ -68,3 +68,4 @@ C:\Users\WeCanCodeIT\Desktop\Co-Leadr\CoLeadr\CoLeadr\obj\Debug\CoLeadr.dll
 C:\Users\WeCanCodeIT\Desktop\Co-Leadr\CoLeadr\CoLeadr\obj\Debug\CoLeadr.pdb
 C:\Users\WeCanCodeIT\Desktop\Co-Leadr\CoLeadr\CoLeadr\bin\AutoMapper.dll
 C:\Users\WeCanCodeIT\Desktop\Co-Leadr\CoLeadr\CoLeadr\bin\AutoMapper.xml
+C:\Users\WeCanCodeIT\Desktop\Co-Leadr\CoLeadr\CoLeadr\obj\Debug\CoLeadr.csprojResolveAssemblyReference.cache
