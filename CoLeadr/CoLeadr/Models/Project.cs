@@ -8,11 +8,13 @@ namespace CoLeadr.Models
 {
     public class Project
     {
+
         [Key]
         public int ProjectId { get; set; }
 
         [Display(Name = "Name")]
         public string Name { get; set; }
+
         [Display(Name = "End Date")]
         public string EndDate { get; set; }
 
@@ -24,7 +26,5 @@ namespace CoLeadr.Models
 
         public virtual ICollection<PersonProjectRecord> PersonProjectRecords { get; set; }
 
-
-        
     }
 }

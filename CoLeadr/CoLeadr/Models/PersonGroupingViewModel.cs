@@ -24,6 +24,10 @@ namespace CoLeadr.Models
         public SelectList AllGroups { get; set; }
         public int SelectedGroupId { get; set; }
 
+        [Display(Name = "All Available Groups")]
+        public List<Group> AllAvailableGroups { get; set; }
+        public int[] SelectedGroupIds { get; set; }
+
 
     }
 

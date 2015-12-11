@@ -15,6 +15,46 @@ namespace CoLeadr.Controllers
     {
         private CoLeadrDBContext db = new CoLeadrDBContext();
 
+        //GET: EditGroupMemberships
+        public ActionResult EditGroupMemberships(int? PersonId)
+        {
+            if(PersonId == null)
+                 {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Person person = db.People.Find(PersonId);
+
+            if (person == null)
+            {
+                return HttpNotFound();
+            }
+
+            List<Group> allgroups = new List<Group>(); 
+            foreach (Group g in db.Groups)
+            {
+                allgroups.Add(g);
+            }
+
+            PersonGroupingViewModel viewmodel = new PersonGroupingViewModel();
+            viewmodel.PersonId = person.PersonId;
+            viewmodel.FirstName = person.FirstName;
+            viewmodel.LastName = person.LastName;
+            viewmodel.AllAvailableGroups = allgroups;
+
+            //viewmodel.Memberships cannot be empty AND THEY ARE ALWAYS EMPTY
+            if (person.Memberships == null)
+            {
+                IList<Group> members = new List<Group>();
+                viewmodel.Memberships = members;
+            }
+            else
+            {
+                viewmodel.Memberships = person.Memberships;
+            }
+            return View(viewmodel); 
+        }
+
         // GET: People
         public ActionResult Index()
         {

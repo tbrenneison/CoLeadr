@@ -1,0 +1,41 @@
+﻿@model CoLeadr.Models.PersonGroupingViewModel
+
+@{
+    ViewBag.Title = "Edit Group Memberships";
+}
+
+<h2>Add Member To Group</h2>
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Person", "Index")</li>
+    <li class="active">Edit Group Memberships</li>
+</ol>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+        <h4>@Html.DisplayFor(model => model.FirstName)'s Groups</h4>
+
+        <div id="groupmemberships">
+            <div class="form-gruop">
+                @Html.LabelFor(model => model.AllAvailableGroups, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+
+                    @foreach (var group in Model.AllAvailableGroups)
+                    {
+                        //these should be checked if the person is in t3h group
+                        //<input type="checkbox" name="SelectedGroupIds" value="@group.GroupId">
+                        //<label for="@group.GroupId">@group.Name</label>
+
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Add To Group" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+}

@@ -5,7 +5,10 @@
 }
 
 <h2>Edit</h2>
-
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Person", "Index")</li>
+    <li class="active">Edit Person</li>
+</ol>
 
 @using (Html.BeginForm())
 {

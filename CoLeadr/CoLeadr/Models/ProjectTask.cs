@@ -15,11 +15,13 @@ namespace CoLeadr.Models
 
         [Display(Name = "Description")]
         public string Description { get; set; }
+
         [Display(Name = "Complete?")]
         public bool IsComplete { get; set; }
 
         [Display(Name = "Task Participants")]
         public virtual ICollection<TaskParticipant> TaskParticipants { get; set; }
+
     }
 
 }
